@@ -1,0 +1,54 @@
+@ACL1000
+^LOGFILE  Decrypt_Encrypt                     "" "Decrypt_Encrypt.LOG"
+[PARENT_FOLDER_ID] 0
+^BATCH    Decrypt_Encrypt                    
+[PARENT_FOLDER_ID] 0
+COMMENT ***** Set the environment
+SET SAFETY OFF
+
+COMMENT ***** All paths and file names have NO embedded blanks, other than the one instance of the path to the executable
+ASSIGN v_encrypted_volume  = "C:\Data_TrueCrypt_40GB" 
+ASSIGN v_keyfile_and_path  = "C:\Users\MikeA665\tckf.dat"
+ASSIGN v_driveletter       = "U"   
+
+COMMENT
+***** Truecrypt switches ***********************
+***** /q   quiet operation , background execution does not present the GUI
+***** /l   letter of the drive to assign to the decrupted volume
+***** /v   volume name of the encrypted container (file, drive, partition) to be opened (decryts and opens)
+***** /k   a key file is used to authenticate to the encrypted container
+*****
+***** /q   same as above
+***** /d   dismount the encrypted volume (closes and encrypts)
+***** /f   forces the dismount if necessary, this ensures the volume is closed and re-encrypted
+END
+
+COMMENT ***** Mount or "decrypt" the volume and assign it a drive letter U
+COMMENT ***** Authentication is achieved using a "what you have" factor,  a key file  tckf.dat
+COMMENT ***** make sure the key file is in a location only intended users have logical access permissions
+EXECUTE ' "C:\Program Files\TrueCrypt\TrueCrypt.exe"  /q background /l%v_driveletter% /v %v_encrypted_volume% /k %v_keyfile_and_path% '
+
+ 
+COMMENT ***** The decrypted file in the U drive now can be processed using typical ACL commands
+COMMENT ***** Careful with "TO SCREEN" output, sensitive data may be written to the local ACL log which is not encrypted
+COMMENT ***** with some commands such as DUPLICATES 
+IMPORT EXCEL TO Adjusting_Entries_FYE_2010 "%v_driveletter%:\Adjusting_Entries_FYE_2010.fil" FROM "%v_driveletter%:\Adjusting_Entries.XLS" TABLE "Sheet1$" KEEPTITLE FIELD "Entry_Date" D WID 19 PIC "YYYY-MM-DD" AS "" FIELD "User_ID" C WID 3 AS "" FIELD "Ref" C WID 5 AS "" FIELD "Journal" C WID 3 AS "" FIELD "Company" C WID 2 AS "" FIELD "Division" C WID 2 AS "" FIELD "Department" N WID 4 DEC 0 AS "" FIELD "Account" N WID 5 DEC 0 AS "" FIELD "Acct_Desc" C WID 40 AS "" FIELD "Amount" N WID 9 DEC 2 AS "" FIELD "DR_CR" C WID 2 AS ""
+
+VERIFY ALL TO "verifyoutput.vfy"
+IF FILESIZE("verifyoutput.vfy") > 0 ESCAPE
+STATISTICS ON Amount
+
+
+COMMENT ***** Make sure you have closed all tables and .FILs before you dismount the volume
+CLOSE PRIMARY
+CLOSE SECONDARY
+
+
+COMMENT ***** Dismount or "encrypt" the volume 
+EXECUTE ' "C:\Program Files\TrueCrypt\TrueCrypt.exe"  /q /d /f '
+
+
+COMMENT ***** Reset the environment
+SET SAFETY ON
+
+^OPEN 

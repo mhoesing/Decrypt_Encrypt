@@ -1,0 +1,181 @@
+@@ Log File C:\ACL_Data\Testing_Analytics_10\Decrypt_Encrypt\Decrypt_Encrypt.LOG Opened at $$51fd1902 09:51:46 on Aug 03, 2013
+@ COMMENT - A range of the Log has been deleted
+@ DO Decrypt_Encrypt
+09:51:49 - Aug 03, 2013
+@ COMMENT ***** Set the environment
+09:51:49 - Aug 03, 2013
+@ SET SAFETY OFF
+09:51:49 - Aug 03, 2013
+
+@ COMMENT ***** All paths and file names have NO embedded blanks, other than the one instance of the path to the executable
+09:51:49 - Aug 03, 2013
+@ ASSIGN v_encrypted_volume  = "C:\Data_TrueCrypt_40GB"
+09:51:49 - Aug 03, 2013
+@ ASSIGN v_keyfile_and_path  = "C:\Users\MikeA665\tckf.dat"
+09:51:49 - Aug 03, 2013
+@ ASSIGN v_driveletter       = "U"
+09:51:49 - Aug 03, 2013
+
+@ COMMENT
+09:51:49 - Aug 03, 2013
+***** Truecrypt switches ***********************
+***** /q   quiet operation , background execution does not present the GUI
+***** /l   letter of the drive to assign to the decrupted volume
+***** /v   volume name of the encrypted container (file, drive, partition) to be opened (decryts and opens)
+***** /k   a key file is used to authenticate to the encrypted container
+*****
+***** /q   same as above
+***** /d   dismount the encrypted volume (closes and encrypts)
+***** /f   forces the dismount if necessary, this ensures the volume is closed and re-encrypted
+END
+
+@ COMMENT ***** Mount or "decrypt" the volume and assign it a drive letter U
+09:51:49 - Aug 03, 2013
+@ COMMENT ***** Authentication is achieved using a "what you have" factor,  a key file  tckf.dat
+09:51:49 - Aug 03, 2013
+@ COMMENT ***** make sure the key file is in a location only intended users have logical access permissions
+09:51:49 - Aug 03, 2013
+@ EXECUTE ' "C:\Program Files\TrueCrypt\TrueCrypt.exe"  /q background /lU /v C:\Data_TrueCrypt_40GB /k C:\Users\MikeA665\tckf.dat '
+09:51:49 - Aug 03, 2013
+EXECUTE ' "C:\Program Files\TrueCrypt\TrueCrypt.exe"  /q background /lU /v C:\Data_TrueCrypt_40GB /k C:\Users\MikeA665\tckf.dat '
+Application return code : 0.
+
+
+@ COMMENT ***** The decrypted file in the U drive now can be processed using typical ACL commands
+09:51:54 - Aug 03, 2013
+@ COMMENT ***** Careful with "TO SCREEN" output, sensitive data may be written to the local ACL log which is not encrypted
+09:51:54 - Aug 03, 2013
+@ COMMENT ***** with some commands such as DUPLICATES
+09:51:54 - Aug 03, 2013
+@ IMPORT EXCEL TO Adjusting_Entries_FYE_2010 "U:\Adjusting_Entries_FYE_2010.fil" FROM "U:\Adjusting_Entries.XLS" TABLE "Sheet1$" KEEPTITLE FIELD "Entry_Date" D WID 19 PIC "YYYY-MM-DD" AS "" FIELD "User_ID" C WID 3 AS "" FIELD "Ref" C WID 5 AS "" FIELD "Journal" C WID 3 AS "" FIELD "Company" C WID 2 AS "" FIELD "Division" C WID 2 AS "" FIELD "Department" N WID 4 DEC 0 AS "" FIELD "Account" N WID 5 DEC 0 AS "" FIELD "Acct_Desc" C WID 40 AS "" FIELD "Amount" N WID 9 DEC 2 AS "" FIELD "DR_CR" C WID 2 AS ""
+09:51:54 - Aug 03, 2013
+@ OPEN Adjusting_Entries_FYE_2010
+09:51:54 - Aug 03, 2013
+11 fields activated
+Opening file name Adjusting_Entries_FYE_2010.fil as supplied in the table layout.
+
+@ VERIFY ALL TO "verifyoutput.vfy"
+09:51:54 - Aug 03, 2013
+  0 data validity errors detected
+0 records produced
+Output to C:\ACL_Data\Testing_Analytics_10\Decrypt_Encrypt\verifyoutput.vfy is done
+@ IF FILESIZE("verifyoutput.vfy") > 0 ESCAPE
+09:51:54 - Aug 03, 2013
+Command not executed: test was FALSE
+@ STATISTICS ON Amount
+09:51:54 - Aug 03, 2013
+  Field    : Amount              
+              Number                       Total                     Average
+  Positive :      32                1,235,981.50                   38,624.42
+  Zeros    :       0
+  Negative :       0                        0.00                        0.00
+  Totals   :      32                1,235,981.50                   38,624.42
+  Abs Value:                        1,235,981.50
+  Range    :                          131,624.55
+  Highest  : 132,908.32 131,200.00 121,500.00 121,500.00 52,345.00 
+  Lowest   : 1,283.77 1,708.32 2,975.18 2,975.18 8,743.98 
+
+
+<?xml version="1.0" encoding="Windows-1252" ?>
+<result version="4" aclversion="10.0.0.000">
+<command>
+<commandId>STATISTICS</commandId>
+<commandLine>STATISTICS ON Amount</commandLine>
+</command>
+<data>
+<newField>
+<column>
+<displayname>Amount</displayname>
+<fieldname>Amount</fieldname>
+</column>
+<Positive>
+<number>32</number>
+<total>1235981.50</total>
+<average type="num">38624.42</average>
+</Positive>
+<Zeros>
+<number>0</number>
+<total blank="0"></total>
+<average blank="0" type="num"></average>
+</Zeros>
+<Negative>
+<number>0</number>
+<total>0.00</total>
+<average type="num">0.00</average>
+</Negative>
+<Totals>
+<number>32</number>
+<total>1235981.50</total>
+<average type="num">38624.42</average>
+</Totals>
+<AbsValue>
+<number blank="0"></number>
+<total>1235981.50</total>
+<average blank="0" type="num"></average>
+</AbsValue>
+<Range>
+<number blank="0"></number>
+<total>131624.55</total>
+<average blank="0" type="num"></average>
+</Range>
+<Highest>
+<value type="num">132908.32</value>
+<value type="num">131200.00</value>
+<value type="num">121500.00</value>
+<value type="num">121500.00</value>
+<value type="num">52345.00</value>
+</Highest>
+<Lowest>
+<value type="num">1283.77</value>
+<value type="num">1708.32</value>
+<value type="num">2975.18</value>
+<value type="num">2975.18</value>
+<value type="num">8743.98</value>
+</Lowest>
+</newField>
+</data>
+<cmdMetaData>
+<designation>Produced with ACL by:</designation>
+<timeStamp>
+<date>
+<year>2013</year>
+<month>8</month>
+<day>3</day>
+</date>
+<time>
+<hour>9</hour>
+<min>51</min>
+<sec>54</sec>
+</time>
+</timeStamp>
+<primaryFile>Adjusting_Entries_FYE_2010</primaryFile>
+<recordsUsed>32</recordsUsed>
+</cmdMetaData>
+</result>
+
+
+@ COMMENT ***** Make sure you have closed all tables and .FILs before you dismount the volume
+09:51:54 - Aug 03, 2013
+@ CLOSE PRIMARY
+09:51:54 - Aug 03, 2013
+@ CLOSE SECONDARY
+09:51:54 - Aug 03, 2013
+
+
+@ COMMENT ***** Dismount or "encrypt" the volume
+09:51:54 - Aug 03, 2013
+@ EXECUTE ' "C:\Program Files\TrueCrypt\TrueCrypt.exe"  /q /d /f '
+09:51:54 - Aug 03, 2013
+EXECUTE ' "C:\Program Files\TrueCrypt\TrueCrypt.exe"  /q /d /f '
+Application return code : 0.
+
+
+@ COMMENT ***** Reset the environment
+09:52:00 - Aug 03, 2013
+@ SET SAFETY ON
+09:52:00 - Aug 03, 2013
+
+@ COMMENT - Execution of Decrypt_Encrypt completed
+09:52:00 - Aug 03, 2013
+@ DELETE FORMAT Adjusting_Entries_FYE_2010 OK
+09:52:13 - Aug 03, 2013
